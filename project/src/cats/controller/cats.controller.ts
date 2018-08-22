@@ -1,8 +1,12 @@
-import { Controller, Get, Req, Post, HttpCode, Header, Param, Body} from '@nestjs/common';
+import { Controller, Get, Req, Post, HttpCode, Header, Param, Body, UsePipes, UseGuards, ReflectMetadata} from '@nestjs/common';
 import { CreateCatDto } from '../dto/crete-cat.dto';
 import { CatsService } from '../service/cat.service';
+import { JoiValidationPipe } from './../../common/pipes/joiValidation.pipe';
+import { AuthGuard } from './../../common/guards/auth.guard';
+import { Roles } from 'common/decorator/roles.decorator';
 
 @Controller('cats')
+@UseGuards(AuthGuard)
 export class CatsController {
 
     constructor(private readonly catService: CatsService){}
@@ -18,6 +22,8 @@ export class CatsController {
 
     @Post('/addCats')
     create(){
+        /*Excepciones de error
+        throw new HttpException('Forbiden', HttpStatus.FORBIDDEN);*/
         return 'Esta accion añade un nuevo gato';
     }
 
@@ -77,6 +83,8 @@ export class CatsController {
 
     /*CONSULTANDO UN SERVICE*/
     @Post('withCat')
+    @UsePipes(new JoiValidationPipe())
+    @Roles('admin')
     async create2(@Body() createCatDto: CreateCatDto){
         return await this.catService.create(createCatDto);
     }
