@@ -1,11 +1,12 @@
 import { Module, NestModule, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
-import { AppController } from 'app.controller';
-import { AppService } from 'app.service';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import { CatsModule } from './cats/cats.module';
-import { LoggerMiddleware } from 'common/middleware/logger.middleware';
+import { AuthModule } from './auth/auth.module';
+import { LoggerMiddleware } from './common/middleware/logger.middleware';
 
 @Module({
-  imports: [CatsModule],
+  imports: [CatsModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
