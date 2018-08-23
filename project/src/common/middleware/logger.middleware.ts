@@ -4,7 +4,7 @@ import { Injectable, NestMiddleware, MiddlewareFunction } from '../../../node_mo
 export class LoggerMiddleware implements NestMiddleware {
     resolve(...args: any[]): MiddlewareFunction {
         return (req, res, next) => {
-            console.log('Request....');
+            req.user = 'admin';
             next();
         };
     }

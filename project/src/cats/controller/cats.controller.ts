@@ -1,12 +1,14 @@
-import { Controller, Get, Req, Post, HttpCode, Header, Param, Body, UsePipes, UseGuards, ReflectMetadata} from '@nestjs/common';
+import { Controller, Get, Req, Post, HttpCode, Header, Param, Body, UsePipes, UseGuards, ReflectMetadata, UseInterceptors} from '@nestjs/common';
 import { CreateCatDto } from '../dto/crete-cat.dto';
 import { CatsService } from '../service/cat.service';
 import { JoiValidationPipe } from './../../common/pipes/joiValidation.pipe';
 import { AuthGuard } from './../../common/guards/auth.guard';
 import { Roles } from 'common/decorator/roles.decorator';
+import { LoggingInterceptor } from 'common/interteptor/logging.interceptor';
 
 @Controller('cats')
 @UseGuards(AuthGuard)
+@UseInterceptors(LoggingInterceptor)
 export class CatsController {
 
     constructor(private readonly catService: CatsService){}
@@ -83,8 +85,8 @@ export class CatsController {
 
     /*CONSULTANDO UN SERVICE*/
     @Post('withCat')
-    @UsePipes(new JoiValidationPipe())
     @Roles('admin')
+    @UsePipes(new JoiValidationPipe())
     async create2(@Body() createCatDto: CreateCatDto){
         return await this.catService.create(createCatDto);
     }

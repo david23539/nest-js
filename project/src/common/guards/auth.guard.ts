@@ -5,17 +5,19 @@ import { Reflector } from '../../../node_modules/@nestjs/core';
 @Injectable()
 export class AuthGuard implements CanActivate{
     constructor(private readonly reflector: Reflector) {}
-    canActivate(context: ExecutionContext): boolean{
-        const roles = this.reflector.get<string[]>('roles', context.getHandler());
-        if ( !roles){
-            return true;
-        }
 
-        const request = context.switchToHttp().getRequest();
-        
+    canActivate(context: ExecutionContext): boolean{
+        const roles = this.reflector.get<string[]>('roles', context.getHandler()); /*Esta funcion requpera el privilegio necesario de la operacion*/
+        const request = context.switchToHttp().getRequest(); /*Esta funcion recupera la request del contexto */
         const user = request.user;
-        
-        const hasRole = () => user.roles.some((role) => roles.includes(role));
-        return user && user.roles && hasRole();
+
+        if (roles && roles.toString() === user){
+            return true;
+        }else if ( !roles) {
+            return true;
+
+        }else{
+            return false; /* En este caso devuelve un forbiden*/
+        }
     }
 }
