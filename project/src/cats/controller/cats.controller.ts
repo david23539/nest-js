@@ -3,12 +3,14 @@ import { CreateCatDto } from '../dto/crete-cat.dto';
 import { CatsService } from '../service/cat.service';
 import { JoiValidationPipe } from './../../common/pipes/joiValidation.pipe';
 import { AuthGuard } from './../../common/guards/auth.guard';
-import { Roles } from 'common/decorator/roles.decorator';
-import { LoggingInterceptor } from 'common/interteptor/logging.interceptor';
+import { Roles } from './../../common/decorator/roles.decorator';
+import { LoggingInterceptor } from './../../common/interteptor/logging.interceptor';
+import { TransformInterceptor } from './../../common/interteptor/transform.interceptor';
+import { ExcludeNullInterceptor } from './../../common/interteptor/exclude.interceptor';
 
 @Controller('cats')
 @UseGuards(AuthGuard)
-@UseInterceptors(LoggingInterceptor)
+@UseInterceptors(LoggingInterceptor, TransformInterceptor, ExcludeNullInterceptor)
 export class CatsController {
 
     constructor(private readonly catService: CatsService){}
